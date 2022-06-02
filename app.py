@@ -11,7 +11,7 @@ bcrypt = Bcrypt(app)
 app.config['DEBUG'] = True
 app.secret_key = '$2b$12$gAwc2M'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://loddhlwitwrztt:652dc3990b3768f16c582bb1de793be02842758f6360f433a397521748cfa78a@ec2-176-34-211-0.eu-west-1.compute.amazonaws.com:5432/d3j0ipm3kckdu8"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://cqvvsnpftqxvff:1f3e22cd57a34a1c43b3f3464afd8bf4586097ec7ab548deb3a39548fb72ba48@ec2-52-48-159-67.eu-west-1.compute.amazonaws.com:5432/db3fgetdk9r5i0"
 db = SQLAlchemy(app)
 
 class UserData(db.Model):

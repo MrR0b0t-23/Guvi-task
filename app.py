@@ -17,11 +17,11 @@ db = SQLAlchemy(app)
 class UserData(db.Model):
     __tablename__ = 'UserData'
     UserId = db.Column(db.Integer, primary_key=True)
-    Firstname = db.Column(db.String(80), nullable=False)
-    Lastname = db.Column(db.String(80), nullable=False)
-    Email = db.Column(db.String(80), nullable=False)
-    MobileNumber = db.Column(db.String(10), nullable=False)
-    PasswordHash = db.Column(db.String(80), nullable=False)
+    Firstname = db.Column(db.String(255), nullable=False)
+    Lastname = db.Column(db.String(255), nullable=False)
+    Email = db.Column(db.String(255), nullable=False)
+    MobileNumber = db.Column(db.String(255), nullable=False)
+    PasswordHash = db.Column(db.String(255), nullable=False)
 
     def __init__ (self, Firstname, Lastname, Email, MobileNumber, PasswordHash):
         self.Firstname= Firstname
@@ -34,7 +34,7 @@ class LoginData(db.Model):
     __tablename__ = 'LoginData'
     LoginId = db.Column(db.Integer, primary_key=True)
     UserId = db.Column(db.Integer, nullable = False)
-    Email = db.Column(db.String(80), nullable=False)
+    Email = db.Column(db.String(255), nullable=False)
     DateTime = db.Column(db.DateTime, nullable=False, default= datetime.datetime.utcnow())
 
     def __init__ (self, UserId, Email):
@@ -45,26 +45,26 @@ class ProfileData(db.Model):
     __tablename__ = 'ProfileData'
     ProfileId = db.Column(db.Integer, primary_key=True)
     UserId = db.Column(db.Integer, nullable=False)
-    Firstname = db.Column(db.String(80), nullable=False)
-    Lastname = db.Column(db.String(80), nullable=False)
-    Email = db.Column(db.String(80), nullable=False)
-    MobileNumber = db.Column(db.String(10), nullable=False)
+    Firstname = db.Column(db.String(255), nullable=False)
+    Lastname = db.Column(db.String(255), nullable=False)
+    Email = db.Column(db.String(255), nullable=False)
+    MobileNumber = db.Column(db.String(255), nullable=False)
     Age = db.Column(db.Integer, nullable=False)
-    Degree = db.Column(db.String(80), nullable=False)
-    Department = db.Column(db.String(80), nullable=False)
+    Degree = db.Column(db.String(255), nullable=False)
+    Department = db.Column(db.String(255), nullable=False)
     PassoutYear = db.Column(db.Integer, nullable=False)
-    RegisterNumber = db.Column(db.String(80), nullable=False)
-    CollegeName = db.Column(db.String(80), nullable=False)
+    RegisterNumber = db.Column(db.String(255), nullable=False)
+    CollegeName = db.Column(db.String(255), nullable=False)
     CGPA = db.Column(db.Float, nullable=False)
-    SelfIntro = db.Column(db.String(1000), nullable=False)
-    SSLC_School = db.Column(db.String(80), nullable=False)
+    SelfIntro = db.Column(db.String(5000), nullable=False)
+    SSLC_School = db.Column(db.String(255), nullable=False)
     SSLC_Precentage = db.Column(db.Float, nullable=False)
     SSLC_Year = db.Column(db.Integer, nullable=False)
-    HSC_School = db.Column(db.String(80), nullable=False)
+    HSC_School = db.Column(db.String(255), nullable=False)
     HSC_Precentage = db.Column(db.Float, nullable=False)
     HSC_Year = db.Column(db.Integer, nullable=False)
-    Website = db.Column(db.String(80), nullable=False)
-    Github = db.Column(db.String(80), nullable=False)
+    Website = db.Column(db.String(255), nullable=False)
+    Github = db.Column(db.String(255), nullable=False)
 
     def __init__ (self, UserId, Firstname, Lastname, Email, MobileNumber, Age, 
                  Degree, Department, PassoutYear, RegisterNumber, CollegeName, CGPA,

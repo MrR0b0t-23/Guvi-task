@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Guvi Developer Task | Profile</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src={{ url_for( 'static',filename="js/profile.js" )}}></script>
+</head>
+
+<body>
+
+    <h5 style="margin: auto; width: 50%;
+        height: 50%; text-align: center; padding-top: 30px;">Profile</h5>
+    <form action="" id="profileform" method="POST" class="needs-validation" novalidate>
+
+        <div class="row" style="margin: 0;">
+            <div class="col-5 offset-1 pt-4">
+                <div class="row g-3 ">
+                    <div class="col-md-6">
+                        <label for="inputfname" class="form-label">First name</label>
+                        <input type="text" class="form-control" id="inputfname" name="inputfname" value={{data.FirstName}} disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputlname" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="inputlname" name="inputlname" value={{data.LastName}} disabled>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="inputemail" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="inputemail" name="inputemail" value={{data.Email}} disabled>
+                    </div>
+                    <div class="col-6">
+                        <label for="inputcnumber" class="form-label">Contact Number</label>
+                        <input type="text" class="form-control" id="inputcnumber" name="inputcnumber" value={{data.MobileNumber}} disabled>
+                    </div>
+                    <div class="col-6">
+                        <label for="inputage" class="form-label">Age</label>
+                        <input type="number" class="form-control" id="inputage" name="inputage" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputdegree" class="form-label">Degree</label>
+                        <select id="inputdegree" name="inputdegree" class="form-select" required>
+                            <option selected>Choose...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputdept" class="form-label">Department</label>
+                        <select id="inputdept" name="inputdept" class="form-select" required>
+                            <option selected>Choose...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputpoyear" class="form-label">Passout year</label>
+                        <select id="inputpoyear" name="inputpoyear" class="form-select" required>
+                            <option selected>Choose...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputrnumber" class="form-label">Register number</label>
+                        <input type="text" class="form-control" id="inputrnumber" name="inputrnumber" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputclg" class="form-label">College name</label>
+                        <select id="inputclg" name="inputclg" class="form-select" required>
+                            <option>Choose...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputcgpa" class="form-label">CGPA</label>
+                        <input type="number" class="form-control" id="inputcgpa" name="inputcgpa" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 pt-4" style="padding-left: 3%;">
+                <div class="row g-3 ">
+                    <div class="col-md-12">
+                        <label for="inputintro" class="form-label">Self intro</label>
+                        <textarea class="form-control" id="inputintro" rows="4" name="inputintro" required></textarea>
+                    </div>
+                    <div class="col-md-12 gy-2">
+                        <label>SSLC</label>
+                    </div>
+                    <div class="col-md-4 gy-1">
+                        <label for="inputsslcschool" class="form-label">School</label>
+                        <input type="text" class="form-control" id="inputsslcschool" name="inputsslcschool" required>
+                    </div>
+                    <div class="col-md-4 gy-1">
+                        <label for="inputsslcprecent" class="form-label">Precentage</label>
+                        <input type="text" class="form-control" id="inputsslcprecent" name="inputsslcprecent" required>
+                    </div>
+                    <div class="col-md-4 gy-1">
+                        <label for="inputsslcyear" class="form-label">Year</label>
+                        <input type="text" class="form-control" id="inputsslcyear" name="inputsslcyear" required>
+                    </div>
+
+                    <div class="col-md-12 gy-2">
+                        <label>HSC</label>
+                    </div>
+                    <div class="col-md-4 gy-1">
+                        <label for="inputhscschool" class="form-label">School</label>
+                        <input type="text" class="form-control" id="inputhscschool" name="inputhscschool" required>
+                    </div>
+                    <div class="col-md-4 gy-1">
+                        <label for="inputhscprecent" class="form-label">Precentage</label>
+                        <input type="text" class="form-control" id="inputhscprecent" name="inputhscprecent" required>
+                    </div>
+                    <div class="col-md-4 gy-1">
+                        <label for="inputhscyear" class="form-label">Year</label>
+                        <input type="text" class="form-control" id="inputhscyear" name="inputhscyear" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputwebsite" class="form-label">Website</label>
+                        <input type="text" class="form-control" id="inputwebsite" name="inputwebsite" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputgithub" class="form-label">Github</label>
+                        <input type="text" class="form-control" id="inputgithub" name="inputgithub" required>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>

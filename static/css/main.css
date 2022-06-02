@@ -1,0 +1,26 @@
+.page-center {
+    width: 50%;
+    height: 50%;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.inner-center-login {
+    width: 400px;
+    height: auto;
+}
+
+.inner-center-signup {
+    width: 500px;
+    height: auto;
+}
+
+body {
+    background-color: white;
+}

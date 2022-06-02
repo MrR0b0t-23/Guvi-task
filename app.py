@@ -153,7 +153,7 @@ def profile():
         _hscYear = request.form['inputhscyear']
         _website = request.form['inputwebsite']
         _github = request.form['inputgithub']
-        _newProfile = ProfileData(Firstname = _fname, Lastname = _lname, Email = _email,
+        _newProfile = ProfileData(UserId =_userId, Firstname = _fname, Lastname = _lname, Email = _email,
                                 MobileNumber = _cnumber, Age = _age, Degree = _degree, 
                                 Department = _dept, PassoutYear = _poyear, RegisterNumber = _rnumber,
                                 CollegeName = _clg, CGPA = _cgpa, SelfIntro = _intro, 

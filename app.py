@@ -103,7 +103,7 @@ def signup():
         if _email and _pwd:
             _newUser = UserData(Firstname = _fname, Lastname = _lname, Email = _email,
                                 MobileNumber = _mnumber, 
-                                PasswordHash = bcrypt.generate_password_hash(_pwd))
+                                PasswordHash = bcrypt.generate_password_hash(_pwd).decode('utf8'))
             db.session.add(_newUser)
             db.session.commit()
         return redirect(url_for('login'))

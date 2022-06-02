@@ -11,7 +11,7 @@ bcrypt = Bcrypt(app)
 app.config['DEBUG'] = True
 app.secret_key = '$2b$12$gAwc2M'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///guvitask.sqlite3"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://loddhlwitwrztt:652dc3990b3768f16c582bb1de793be02842758f6360f433a397521748cfa78a@ec2-176-34-211-0.eu-west-1.compute.amazonaws.com:5432/d3j0ipm3kckdu8"
 db = SQLAlchemy(app)
 
 class UserData(db.Model):
@@ -166,8 +166,6 @@ def profile():
     return render_template('ProfilePage.html', data = _data)
 
 if __name__ == "__main__":
-    if not os.path.exists("guvitask.sqlite3"):
-        db.create_all()
     app.run()
        
     

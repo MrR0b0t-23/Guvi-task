@@ -128,42 +128,45 @@ def login():
 
 @app.route('/profile', methods=['POST', 'GET'])
 def profile():
-    _userId = int(request.cookies.get('userId'))
-    _user = UserData.query.filter_by(UserId = _userId).first() 
-    _data = {'FirstName': _user.Firstname, 'LastName': _user.Lastname,
-             'MobileNumber': _user.MobileNumber, 'Email': _user.Email}
-    if request.method == 'POST':
-        _fname = _user.Firstname
-        _lname = _user.Lastname
-        _email = _user.Email
-        _cnumber = _user.MobileNumber
-        _age = request.form['inputage']
-        _degree = request.form['inputdegree']
-        _dept = request.form['inputdept']
-        _poyear = request.form['inputpoyear']
-        _rnumber = request.form['inputrnumber']
-        _clg = request.form['inputclg']
-        _cgpa = request.form['inputcgpa']
-        _intro = request.form['inputintro']
-        _sslcSchool = request.form['inputsslcschool']
-        _sslcPrecent = request.form['inputsslcprecent']
-        _ssclYear = request.form['inputsslcyear']
-        _hscSchool = request.form['inputhscschool']
-        _hscPrecent = request.form['inputhscprecent']
-        _hscYear = request.form['inputhscyear']
-        _website = request.form['inputwebsite']
-        _github = request.form['inputgithub']
-        _newProfile = ProfileData(UserId =_userId, Firstname = _fname, Lastname = _lname, Email = _email,
-                                MobileNumber = _cnumber, Age = _age, Degree = _degree, 
-                                Department = _dept, PassoutYear = _poyear, RegisterNumber = _rnumber,
-                                CollegeName = _clg, CGPA = _cgpa, SelfIntro = _intro, 
-                                SSLC_School = _sslcSchool, SSLC_Precentage = _sslcPrecent, 
-                                SSLC_Year = _ssclYear, HSC_School = _hscSchool, HSC_Precentage = _hscPrecent,
-                                HSC_Year = _hscYear, Website = _website, Github = _github)
-        db.session.add(_newProfile)
-        db.session.commit()  
-        return redirect(url_for('signup'))  
-    return render_template('ProfilePage.html', data = _data)
+    _Auth = request.cookies.get('Authentication')
+    if _Auth == "True":
+        _userId = int(request.cookies.get('userId'))
+        _user = UserData.query.filter_by(UserId = _userId).first() 
+        _data = {'FirstName': _user.Firstname, 'LastName': _user.Lastname,
+                 'MobileNumber': _user.MobileNumber, 'Email': _user.Email}
+        if request.method == 'POST':
+            _fname = _user.Firstname
+            _lname = _user.Lastname
+            _email = _user.Email
+            _cnumber = _user.MobileNumber
+            _age = request.form['inputage']
+            _degree = request.form['inputdegree']
+            _dept = request.form['inputdept']
+            _poyear = request.form['inputpoyear']
+            _rnumber = request.form['inputrnumber']
+            _clg = request.form['inputclg']
+            _cgpa = request.form['inputcgpa']
+            _intro = request.form['inputintro']
+            _sslcSchool = request.form['inputsslcschool']
+            _sslcPrecent = request.form['inputsslcprecent']
+            _ssclYear = request.form['inputsslcyear']
+            _hscSchool = request.form['inputhscschool']
+            _hscPrecent = request.form['inputhscprecent']
+            _hscYear = request.form['inputhscyear']
+            _website = request.form['inputwebsite']
+            _github = request.form['inputgithub']
+            _newProfile = ProfileData(UserId =_userId, Firstname = _fname, Lastname = _lname, Email = _email,
+                                    MobileNumber = _cnumber, Age = _age, Degree = _degree, 
+                                    Department = _dept, PassoutYear = _poyear, RegisterNumber = _rnumber,
+                                    CollegeName = _clg, CGPA = _cgpa, SelfIntro = _intro, 
+                                    SSLC_School = _sslcSchool, SSLC_Precentage = _sslcPrecent, 
+                                    SSLC_Year = _ssclYear, HSC_School = _hscSchool, HSC_Precentage = _hscPrecent,
+                                    HSC_Year = _hscYear, Website = _website, Github = _github)
+            db.session.add(_newProfile)
+            db.session.commit()  
+            return redirect(url_for('signup'))  
+        return render_template('ProfilePage.html', data = _data)
+    return render_template('LoginPage.html')
 
 if __name__ == "__main__":
     app.run()

@@ -20,7 +20,7 @@ class UserData(db.Model):
     Firstname = db.Column(db.String(80), nullable=False)
     Lastname = db.Column(db.String(80), nullable=False)
     Email = db.Column(db.String(80), nullable=False)
-    MobileNumber = db.Column(db.Integer, nullable=False)
+    MobileNumber = db.Column(db.String(10), nullable=False)
     PasswordHash = db.Column(db.String(80), nullable=False)
 
     def __init__ (self, Firstname, Lastname, Email, MobileNumber, PasswordHash):
@@ -48,7 +48,7 @@ class ProfileData(db.Model):
     Firstname = db.Column(db.String(80), nullable=False)
     Lastname = db.Column(db.String(80), nullable=False)
     Email = db.Column(db.String(80), nullable=False)
-    MobileNumber = db.Column(db.Integer, nullable=False)
+    MobileNumber = db.Column(db.String(10), nullable=False)
     Age = db.Column(db.Integer, nullable=False)
     Degree = db.Column(db.String(80), nullable=False)
     Department = db.Column(db.String(80), nullable=False)

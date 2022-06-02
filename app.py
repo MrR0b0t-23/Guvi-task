@@ -128,11 +128,15 @@ def login():
 
 @app.route('/profile', methods=['POST', 'GET'])
 def profile():
+    _userId = int(request.cookies.get('userId'))
+    _user = UserData.query.filter_by(UserId = _userId).first() 
+    _data = {'FirstName': _user.Firstname, 'LastName': _user.Lastname,
+             'MobileNumber': _user.MobileNumber, 'Email': _user.Email}
     if request.method == 'POST':
-        _fname = request.form['inputfname']
-        _lname = request.form['inputlname']
-        _email = request.form['inputemail']
-        _cnumber = request.form['inputcnumber']
+        _fname = _data.FirstName
+        _lname = _data.LastName
+        _email = _data.Email
+        _cnumber = _data.MobileNumber
         _age = request.form['inputage']
         _degree = request.form['inputdegree']
         _dept = request.form['inputdept']
@@ -159,10 +163,6 @@ def profile():
         db.session.add(_newProfile)
         db.session.commit()  
         return redirect(url_for('signup'))  
-    _userId = int(request.cookies.get('userId'))
-    _user = UserData.query.filter_by(UserId = _userId).first() 
-    _data = {'FirstName': _user.Firstname, 'LastName': _user.Lastname,
-             'MobileNumber': _user.MobileNumber, 'Email': _user.Email}
     return render_template('ProfilePage.html', data = _data)
 
 if __name__ == "__main__":

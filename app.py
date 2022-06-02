@@ -133,10 +133,10 @@ def profile():
     _data = {'FirstName': _user.Firstname, 'LastName': _user.Lastname,
              'MobileNumber': _user.MobileNumber, 'Email': _user.Email}
     if request.method == 'POST':
-        _fname = _data.FirstName
-        _lname = _data.LastName
-        _email = _data.Email
-        _cnumber = _data.MobileNumber
+        _fname = _user.Firstname
+        _lname = _user.Lastname
+        _email = _user.Email
+        _cnumber = _user.MobileNumber
         _age = request.form['inputage']
         _degree = request.form['inputdegree']
         _dept = request.form['inputdept']

@@ -170,6 +170,367 @@ def profile():
 
 if __name__ == "__main__":
     app.run()
+    
+from flask import Flask, render_template
+<<<<<<< HEAD
+import flask
+import mysql.connector
+from multiprocessing import Process, Manager, Value
+import pandas as pd
+from datetime import date, timedelta, datetime
+import pymongo
+import time
+import datetime
+from ctypes import c_char_p
+
+app = Flask(__name__)
+
+def orderPlotQuery(orderPlotDict):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT FROM_UNIXTIME(date), SUM(amount) from `order` 
+                WHERE FROM_UNIXTIME(date) > NOW() - interval 15 day AND `status` LIKE "paid"
+                GROUP BY CAST(FROM_UNIXTIME(date) AS DATE) """
+    cursorObject.execute(query)
+
+    queryResult = cursorObject.fetchall()
+    mydb.close()
+    df = pd.DataFrame(queryResult, columns=['Date', 'TotalSales'])
+    df['Date'] = df['Date'].dt.date
+    df.Date = pd.to_datetime(df.Date)
+    df = df.set_index('Date').reindex(pd.date_range(start=pd.to_datetime(date.today() - timedelta(days=15)),
+                                                    end=pd.to_datetime(date.today()), freq='D'))
+    df.index.name = "Date"
+    df = df.reset_index().fillna(0)
+    dates, sales = df['Date'].dt.date, df['TotalSales'].values
+    orderPlotDict['dates'] = dates
+    orderPlotDict['sales'] = sales
+    return orderPlotDict
+
+
+def orderCountQuery(orderCountValue):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT COUNT(sno) from `order` 
+                WHERE FROM_UNIXTIME(date) > NOW() - interval 15 day AND `status` LIKE "paid" """
+    cursorObject.execute(query)
+    queryResult = cursorObject.fetchall()
+    mydb.close()
+    orderCountValue.value = queryResult[0][0]
+=======
+
+app = Flask(__name__)
+
+@app.route("/")
+def homePage():
+    return render_template("HomePage.html")
+
+@app.route("/activity")
+def activityPage():
+    return render_template("ActivityPage.html")
+
+@app.route("/course")
+def coursePage():
+    return render_template("CoursePage.html")
+
+@app.route("/search")
+def searchPage():
+    return render_template("SearchPage.html")
+
+@app.route("/user")
+def userPage():
+    return render_template("UserPage.html")
+>>>>>>> a4fb573cdeb8dfd30f932973a1573313c725bd1c
+
+
+def orderTotalSalesQuery(orderTotalSalesValue):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT SUM(amount) from `order` 
+                WHERE FROM_UNIXTIME(date) > NOW() - interval 15 day AND `status` LIKE "paid" """
+    cursorObject.execute(query)
+    queryResult = cursorObject.fetchall()
+    mydb.close()
+    orderTotalSalesValue.value = queryResult[0][0]
+
+
+def UserPlotQuery(userPlotDict):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT FROM_UNIXTIME(timestamp), COUNT(DISTINCT('hash')) FROM `course_point_live` WHERE 
+                FROM_UNIXTIME(timestamp) > NOW() - interval 15 day GROUP BY CAST(FROM_UNIXTIME(timestamp) AS DATE) """
+    cursorObject.execute(query)
+
+    queryResult = cursorObject.fetchall()
+    mydb.close()
+    df = pd.DataFrame(queryResult, columns=['Date', 'Count'])
+    df.Date = pd.to_datetime(df.Date)
+    df = df.set_index('Date').reindex(pd.date_range(start=pd.to_datetime(date.today() - timedelta(days=15)),
+                                                    end=pd.to_datetime(date.today()), freq='D'))
+    df.index.name = "Date"
+    df = df.reset_index().fillna(0)
+    dates, count = df['Date'].dt.date, df['Count'].values
+    userPlotDict['dates'] = dates
+    userPlotDict['count'] = count
+    return userPlotDict
+
+
+def UserTotalCountQuery(userTotalCountValue):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT COUNT(DISTINCT('hash')) from `course_point_live` WHERE 
+                FROM_UNIXTIME(timestamp) > NOW() - interval 15 day GROUP BY CAST(FROM_UNIXTIME(timestamp) AS DATE) """
+    cursorObject.execute(query)
+    queryResult = cursorObject.fetchall()
+    mydb.close()
+    #orderTotalCountValue = int(queryResult[0][0]) #queryResult returns NULL
+    orderTotalCountValue = 0  # temp value
+    return orderTotalCountValue
+
+
+@app.route("/")
+def homePage():
+    manager = Manager()
+    orderPlotDict = manager.dict()
+    userPlotDict = manager.dict()
+    orderCountValue = Value('f')
+    orderTotalSalesValue = Value('f')
+    userTotalCountValue = Value('f')
+
+    orderPlotProcess = Process(target=orderPlotQuery, args=(orderPlotDict,))
+    orderCountProcess = Process(
+        target=orderCountQuery, args=(orderCountValue,))
+    orderTotalSalesProcess = Process(
+        target=orderTotalSalesQuery, args=(orderTotalSalesValue,))
+    UserPlotProcess = Process(target=UserPlotQuery, args=(userPlotDict,))
+    UserTotalCountProcess = Process(
+        target=UserTotalCountQuery, args=(userTotalCountValue,))
+
+    orderPlotProcess.start()
+    orderCountProcess.start()
+    orderTotalSalesProcess.start()
+    UserPlotProcess.start()
+    UserTotalCountProcess.start()
+
+    orderPlotProcess.join()
+    orderCountProcess.join()
+    orderTotalSalesProcess.join()
+    UserPlotProcess.join()
+    UserTotalCountProcess.join()
+
+    #UserAvgCount = int(orderTotalCountValue/15)
+    UserAvgCount = 0  # temp value
+    data = {
+        "UserPlot": userPlotDict,
+        "orderPlot": orderPlotDict,
+        "orderCount": orderCountValue.value,
+        "orderTotalSales": orderTotalSalesValue.value,
+        "UserTotalCount": userTotalCountValue.value,
+        "UserAvgCount": UserAvgCount
+    }
+    return render_template("HomePage.html", data=data)
+
+
+@app.route("/activity")
+def activityPage():
+    return render_template("ActivityPage.html")
+
+def CourseNameQuery(CourseNameDict):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT `course_name`, `key` FROM `courses` WHERE 1"""
+    cursorObject.execute(query)
+    queryResult = cursorObject.fetchall()
+    mydb.close()
+    CourseNameDict['detail'] = queryResult
+    return CourseNameDict
+
+def CourseDetailQuery(CourseDetailDict, _courseName):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT * FROM `courses` WHERE key LIKE "{}" """.format(_courseName)
+    cursorObject.execute(query)
+    mydb.close()
+    CourseDetailDict["courseDetail"] = cursorObject.fetchall()
+    return CourseDetailDict
+
+def CourseUserQuery(CouseUserDict, _courseName):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT * FROM `courses` WHERE key LIKE "{}" """.format(_courseName)
+    cursorObject.execute(query)
+    CouseUserDict["userDetail"] = cursorObject.fetchall()
+    mydb.close()
+    return CouseUserDict
+
+@app.route("/course", methods=["GET"])
+def coursePage():
+    manager = Manager()
+    CourseNameDict = manager.dict()
+    CourseDetailDict = manager.dict()
+    CourseUserDict = manager.dict()
+
+    _courseKey = flask.request.args.get('courseKey')
+
+    CourseNameProcess = Process(target=CourseNameQuery, args=(CourseNameDict,))
+    CourseDetailProcess = Process(target=CourseDetailQuery, args=(CourseDetailDict, _courseKey))
+    CouseUserProcess = Process(target=CourseUserQuery, args=(CourseUserDict, _courseKey))
+
+    CourseNameProcess.start()
+    #CourseDetailProcess.start()
+    #CouseUserProcess.start()
+
+    CourseNameProcess.join()
+    #CourseDetailProcess.join()
+    #CouseUserProcess.join()
+
+    data = {"Courses": CourseNameDict["detail"]}
+    
+    return render_template("CoursePage.html", data=data)
+
+
+@app.route("/search")
+def searchPage():
+    return render_template("SearchPage.html")
+
+
+def UserDetailQueryMongo(UserPersDetailDict, _email):
+    client = pymongo.MongoClient(
+        "mongodb://guvidbmongo:guviGEEK9Mongo7@localhost")
+    mytable = client['userData']
+    mycollection = mytable['userObject']
+    UserPersDetailDict["user"] = mycollection.find_one({"email": {"$eq": _email}})
+    return UserPersDetailDict
+
+
+def UserCoursePointQuery(_email, _coursekey):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT `course`, `score`, FROM_UNIXTIME(timestamp) FROM `course_point` WHERE 
+                `email` LIKE "{}" AND `course` LIKE "{}" """.format(_email, _coursekey)
+    cursorObject.execute(query)
+    queryResult = cursorObject.fetchall()
+    mydb.close()
+    UserCoursePointDict = {"score": 0, "date": None}
+    for points in queryResult:
+        UserCoursePointDict = {"score": points[1], "date": points[2]}
+
+    return UserCoursePointDict
+
+
+def UserCourseQuery(UserCourseList, TotalAmountSpendValue, TotalCourseCountValue, _email):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="ashwin",
+        password="guvi123",
+        database="guvi"
+    )
+    cursorObject = mydb.cursor()
+    query = """ SELECT order.PaymentID, courses.key, courses.course_name, courses.language, courses.level, order.mode, 
+                order.net_amount_debit, FROM_UNIXTIME(order.date) FROM `courses` JOIN `order` ON courses.key = 
+                order.product_info WHERE order.email LIKE "{}" AND order.status LIKE "paid" """.format(_email)
+    cursorObject.execute(query)
+    queryResult = cursorObject.fetchall()
+    mydb.close()
+    for courses in queryResult:
+        course = {"PaymentID": courses[0], "CourseKey": courses[1], "CourseName": courses[2], 
+                  "CoursePoint": UserCoursePointQuery(_email, courses[1]),"CourseLanguage": courses[3], "CourseLevel": courses[4],
+                  "PaymentMode": courses[5], "AmountDebit": float(courses[6]), "Date": courses[7] }
+        TotalAmountSpendValue.value += float(courses[6])
+        TotalCourseCountValue.value += 1
+
+        UserCourseList.append(course)
+
+    return (UserCourseList, TotalAmountSpendValue, TotalCourseCountValue)
+
+@app.route("/user", methods=["GET"])
+def userPage():
+    manager = Manager()
+    UserPersDetailDict = manager.dict()
+    UserCourseList = manager.list()
+    TotalAmountSpendValue = Value('f')
+    TotalCourseCountValue = Value('i')
+
+    _email = flask.request.args.get('userEmail')
+
+    UserDetailProcessMongo = Process(target=UserDetailQueryMongo, args=(UserPersDetailDict, _email,))
+    UserCourseProcess = Process( target=UserCourseQuery, args=(UserCourseList, TotalAmountSpendValue, TotalCourseCountValue, _email))
+
+    UserDetailProcessMongo.start()
+    UserCourseProcess.start()
+
+    UserDetailProcessMongo.join()
+    UserCourseProcess.join()
+
+    data = {"UserPersDetail": UserPersDetailDict, "UserCourseDict": UserCourseList, 
+            "TotalAmountSpend": round(TotalAmountSpendValue.value), "TotalCourseCount": TotalCourseCountValue.value }
+    return render_template("UserPage.html", data=data)
+
+@app.template_filter('ctime')
+def timectime(s):
+    return datetime.datetime.strptime(time.ctime(s), "%a %b %d %H:%M:%S %Y")
+
+@app.context_processor
+def inject_enumerate():   
+    return dict(enumerate=enumerate)
+if __name__ == "__main__":
+<<<<<<< HEAD
+    app.run(debug=True, port=2323, host="0.0.0.0")
+
+""" 
+SELECT COUNT(DISTINCT('hash')) as 'count', FROM_UNIXTIME(date) as 'Date' FROM `order` WHERE 
+FROM_UNIXTIME(date) > NOW() - interval 15 day GROUP BY CAST(FROM_UNIXTIME(date) AS DATE)
+
+"""
+=======
+    app.run(debug = True)
+>>>>>>> a4fb573cdeb8dfd30f932973a1573313c725bd1c
+
        
     
     
